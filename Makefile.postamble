@@ -1,0 +1,3 @@
+
+evalexpr gdate: $(PRODUCT) $(CFILES)
+	$(CC) -DDEBUG $(CFLAGS) $(OTHER_CFLAGS) -o $(BIN_DIR)/$@ $@.c $(LIBS)
