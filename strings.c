@@ -44,7 +44,7 @@ char *strdup(const char *str)
 }
 #endif
 
-#if !defined(__USE_GNU)
+#if !defined(__USE_GNU) && !defined(__USE_XOPEN2K8)
 char *strndup(const char *str, size_t len) /* DOES append null at end */
 {
   char *p;

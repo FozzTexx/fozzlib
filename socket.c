@@ -180,7 +180,7 @@ int waitread(int fd, int time)
 {
 	fd_set readbits, other;
 	struct timeval timer;
-	int ret;
+
 
 	timerclear(&timer);
 	timer.tv_sec = time;
@@ -188,7 +188,7 @@ int waitread(int fd, int time)
 	FD_ZERO(&other);
 	FD_SET(fd, &readbits);
 
-	ret = select(fd+1, &readbits, &other, &other, &timer);
+	select(fd+1, &readbits, &other, &other, &timer);
 	if (FD_ISSET(fd, &readbits))
 		return 1;
 	return 0;
