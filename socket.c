@@ -188,6 +188,7 @@ int waitread(int fd, int time)
 	fd_set readbits;
 	struct timeval timer;
 
+
 	timerclear(&timer);
 	timer.tv_sec = time;
 	FD_ZERO(&readbits);

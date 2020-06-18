@@ -22,19 +22,17 @@
 		     + __GNUC_MINOR__ * 100 \
 		     + __GNUC_PATCHLEVEL__)
 
-#if !defined(__GNUC__) || defined(NeXT)
-extern char *strdup(const char *str);
-#endif
 #if GCC_VERSION >= 30101
 #include <string.h>
 #endif
-#if !defined(strndup)
-extern char *strndup(const char *str, size_t len);
+#if !defined(__GNUC__) || defined(NeXT)
+extern char *strdup(const char *str);
 #endif
 #ifdef __STDC__
 #include <string.h>
 #define strpos(x,y) strstr(x,y)
 #else
+extern char *strndup(const char *str, size_t len);
 extern char *strpos(const char *str1, const char *str2);
 #endif
 

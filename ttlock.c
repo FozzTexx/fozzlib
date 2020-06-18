@@ -83,7 +83,10 @@ int ttlock(const char *ttdev)
   write(lockfd, (char *) &pid, sizeof(pid));
 #else
   slprintf(&buf, &buflen, "%10i\n", pid);
-  write(lockfd, buf, strlen(buf));
+  /* This if looks stupid but it was the only way to shutup gcc for a
+     return value I don't care about */
+  if (write(lockfd, buf, strlen(buf)))
+    ;
 #endif
 
   close(lockfd);
@@ -160,7 +163,10 @@ int ttrpid(const char *name)
 
 
   if ((file = fopen(name, "r"))) {
-    fscanf(file, "%i", &pid);
+    /* This if looks stupid but it was the only way to shutup gcc for a
+       return value I don't care about */
+    if (fscanf(file, "%i", &pid))
+      ;
     fclose(file);
   }
 
