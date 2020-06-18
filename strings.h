@@ -28,7 +28,9 @@ extern char *strdup(const char *str);
 #if GCC_VERSION >= 30101
 #include <string.h>
 #endif
+#if !defined(strndup)
 extern char *strndup(const char *str, size_t len);
+#endif
 #ifdef __STDC__
 #include <string.h>
 #define strpos(x,y) strstr(x,y)

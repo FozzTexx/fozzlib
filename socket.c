@@ -71,6 +71,7 @@ int serversock(int port)
 {
 	int	sock, x;
 	struct	sockaddr_in server;
+	int	val;
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock < 0)
@@ -81,6 +82,12 @@ int serversock(int port)
 	server.sin_addr.s_addr = INADDR_ANY;
 	server.sin_port = htons(port);
 
+	val = 1;
+	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &val, sizeof(val));
+#ifdef SO_REUSEPORT
+	setsockopt(sock, SOL_SOCKET, SO_REUSEPORT, &val, sizeof(val));
+#endif
+	
 	x = bind(sock, (struct sockaddr *) &server, sizeof(server));
 	if (x < 0)
 	{
@@ -140,7 +147,7 @@ int clientsock(const char *host, int port)
 
 	bzero(&server, sizeof(server));
 	server.sin_family = AF_INET;
-	bcopy(hp->h_addr, &server.sin_addr, hp->h_length);
+	bcopy(hp->h_addr, &server.sin_addr, (size_t) hp->h_length);
 	server.sin_port = htons(port);
 
 	if (connect(sock, (struct sockaddr *) &server, sizeof(server)) < 0)
@@ -178,17 +185,15 @@ int readable(int fd)
 */
 int waitread(int fd, int time)
 {
-	fd_set readbits, other;
+	fd_set readbits;
 	struct timeval timer;
-	int ret;
 
 	timerclear(&timer);
 	timer.tv_sec = time;
 	FD_ZERO(&readbits);
-	FD_ZERO(&other);
 	FD_SET(fd, &readbits);
 
-	ret = select(fd+1, &readbits, &other, &other, &timer);
+	select(fd+1, &readbits, NULL, NULL, &timer);
 	if (FD_ISSET(fd, &readbits))
 		return 1;
 	return 0;
